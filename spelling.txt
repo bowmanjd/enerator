@@ -19,6 +19,7 @@ gettempdir
 lru
 noqa
 nosec
+nox
 params
 pathlib
 pygments
@@ -28,3 +29,4 @@ runpy
 tmp
 trustme
 unlink
+virtualenvs

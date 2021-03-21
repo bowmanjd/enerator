@@ -39,7 +39,8 @@ def render_from_file(
         DictLoader({"content": page.content}),
         FileSystemLoader(file_path.parent),
     ]
-    loaders.append(FileSystemLoader(template_path.parent))
+    if template_path.exists():
+        loaders.append(FileSystemLoader(template_path.parent))
 
     loader = ChoiceLoader(loaders)
     template_env = Environment(loader=loader, autoescape=True)
