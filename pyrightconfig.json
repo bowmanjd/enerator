@@ -1,0 +1,13 @@
+{
+  "include": [
+    "src"
+  ],
+  "exclude": [
+    "**/node_modules",
+    "**/__pycache__",
+    ".git",
+    "src/typings"
+  ],
+  "stubPath": "src/stubs",
+  "pythonVersion": "3.9"
+}

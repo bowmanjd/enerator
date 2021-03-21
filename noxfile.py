@@ -23,4 +23,5 @@ def coverage_report(session):
 def lint(session):
     session.run("poetry", "install", "-E", "lint", external=True)
     session.run("mypy", "--disallow-untyped-defs", "-p", "enerator")
+    session.run("pyright", "src", external=True)
     session.run("flake8", "src/enerator", "tests")
