@@ -1,5 +1,7 @@
 """Test runner."""
 
+import pathlib
+
 import nox
 
 nox.options.reuse_existing_virtualenvs = True
@@ -21,7 +23,9 @@ def coverage_report(session):
 
 @nox.session
 def lint(session):
+    node_path = pathlib.Path.cwd() / "node_modules/.bin"
+    session.env["PATH"] = f"{node_path}:{session.env['PATH']}"
     session.run("poetry", "install", "-E", "lint", external=True)
     session.run("mypy", "--disallow-untyped-defs", "-p", "enerator")
-    session.run("pyright", "src", external=True)
+    session.run("pyright", external=True)
     session.run("flake8", "src/enerator", "tests")

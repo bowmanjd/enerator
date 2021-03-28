@@ -11,5 +11,10 @@ HTML_TEMPLATE = pathlib.Path("tests/sample_template.html")
 
 def test_render_to_md():
     result = render_from_file(MARKDOWN, MARKDOWN_TEMPLATE)
-    print(result.content)
     assert "By Jonathan" in result.content
+
+
+def test_render_to_html():
+    result = render_from_file(MARKDOWN, HTML_TEMPLATE)
+    print(result.content)
+    assert result.content == pathlib.Path("tests/sample_output.html").read_text()

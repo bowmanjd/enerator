@@ -6,6 +6,8 @@ import typing
 import frontmatter  # type: ignore
 from jinja2 import ChoiceLoader, DictLoader, Environment, FileSystemLoader
 
+from . import parse
+
 
 class Page(typing.NamedTuple):
     """Container for content and metadata."""
@@ -16,7 +18,7 @@ class Page(typing.NamedTuple):
 
 def render_from_file(
     file_path: pathlib.Path,
-    template_path: pathlib.Path = None,
+    template_path: pathlib.Path,
     data: typing.Mapping = None,
 ) -> Page:
     """
@@ -31,7 +33,6 @@ def render_from_file(
         Page content and metadata
 
     """
-    template_path = template_path or pathlib.Path.cwd() / "templates"
     data = data or {}
     page = frontmatter.load(file_path)
 
@@ -39,11 +40,13 @@ def render_from_file(
         DictLoader({"content": page.content}),
         FileSystemLoader(file_path.parent),
     ]
-    if template_path.exists():
-        loaders.append(FileSystemLoader(template_path.parent))
 
     loader = ChoiceLoader(loaders)
     template_env = Environment(loader=loader, autoescape=True)
+    template_env.filters["markdown"] = parse.md_highlight_and_parse
     template = template_env.get_template(template_path.name)
     final_data = {**data, **page.metadata}
-    return Page(template.render(**final_data), final_data)
+    rendered = template.render(**final_data)
+    if template_path.suffix == ".html":
+        rendered = parse.pretty_html(rendered)
+    return Page(rendered, final_data)

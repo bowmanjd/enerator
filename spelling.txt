@@ -19,6 +19,7 @@ gettempdir
 lru
 noqa
 nosec
+nowrap
 nox
 params
 pathlib

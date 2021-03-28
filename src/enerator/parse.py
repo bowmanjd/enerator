@@ -1,6 +1,7 @@
 """Markdown processing and syntax highlighting."""
 
 import re
+import subprocess
 import typing
 
 import cmarkgfm  # type: ignore
@@ -10,7 +11,7 @@ import pygments.lexers  # type: ignore
 
 CODE_RE = re.compile(r"^```([a-z]+)?$(.+?)^```$", re.S | re.M)
 CMARK_FLAGS = 132096  # UNSAFE = 1 << 17; SMART = 1 << 10; CMARK_FLAGS = UNSAFE | SMART
-FORMATTER = pygments.formatters.HtmlFormatter()
+FORMATTER = pygments.formatters.HtmlFormatter(nowrap=True)
 
 
 def md_codeblock(match: typing.Match) -> str:
@@ -29,7 +30,11 @@ def md_codeblock(match: typing.Match) -> str:
         lexer = pygments.lexers.get_lexer_by_name(lang)
     except ValueError:
         lexer = pygments.lexers.TextLexer()
-    return pygments.highlight(code, lexer, FORMATTER)
+    formatted = pygments.highlight(code, lexer, FORMATTER)
+    print(formatted)
+    return (
+        f'<pre class="highlight"><code class="language-{lang}">{formatted}</code></pre>'
+    )
 
 
 def md_highlight(md: str) -> str:
@@ -67,3 +72,17 @@ def md_parse(md: str) -> str:
         HTML converted from the Markdown input.
     """
     return cmarkgfm.markdown_to_html(md, CMARK_FLAGS)
+
+
+def pretty_html(html: str) -> str:
+    """Prettify HTML.
+
+    Args:
+        html: html string
+
+    Returns:
+        Prettified HTML as string
+    """
+    return subprocess.check_output(  # noqa
+        ["prettier", "--parser", "html"], input=html, encoding="utf-8"
+    )
