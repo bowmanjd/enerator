@@ -83,6 +83,8 @@ def pretty_html(html: str) -> str:
     Returns:
         Prettified HTML as string
     """
-    return subprocess.check_output(  # noqa
-        ["prettier", "--parser", "html"], input=html, encoding="utf-8"
+    return subprocess.check_output(
+        ["./node_modules/.bin/prettier", "--parser", "html"],
+        input=html,
+        encoding="utf-8",
     )
