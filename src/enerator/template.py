@@ -38,7 +38,7 @@ def render_from_file(
 
     loaders = [
         DictLoader({"content": page.content}),
-        FileSystemLoader(file_path.parent),
+        FileSystemLoader([file_path.parent, template_path.parent]),
     ]
 
     loader = ChoiceLoader(loaders)

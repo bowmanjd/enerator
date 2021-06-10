@@ -24,7 +24,8 @@ def coverage_report(session):
 @nox.session
 def lint(session):
     node_path = pathlib.Path.cwd() / "node_modules/.bin"
-    session.env["PATH"] = f"{node_path}:{session.env['PATH']}"
+    pyright = pathlib.Path(session.bin) / "pyright"
+    pyright.symlink_to(node_path / "pyright")
     session.run("poetry", "install", "-E", "lint", external=True)
     session.run("mypy", "--disallow-untyped-defs", "-p", "enerator")
     session.run("pyright", external=True)

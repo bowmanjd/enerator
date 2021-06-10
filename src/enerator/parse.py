@@ -31,7 +31,6 @@ def md_codeblock(match: typing.Match) -> str:
     except ValueError:
         lexer = pygments.lexers.TextLexer()
     formatted = pygments.highlight(code, lexer, FORMATTER)
-    print(formatted)
     return (
         f'<pre class="highlight"><code class="language-{lang}">{formatted}</code></pre>'
     )
