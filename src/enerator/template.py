@@ -14,6 +14,7 @@ class Page(typing.NamedTuple):
 
     content: str
     data: dict
+    source_path: pathlib.Path
 
 
 def render_from_file(
@@ -48,5 +49,5 @@ def render_from_file(
     final_data = {**data, **page.metadata}
     rendered = template.render(**final_data)
     if template_path.suffix == ".html":
-        rendered = parse.pretty_html(rendered)
-    return Page(rendered, final_data)
+        rendered = parse.tidy_html(rendered)
+    return Page(rendered, final_data, file_path)

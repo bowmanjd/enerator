@@ -1,13 +1,13 @@
 """Markdown processing and syntax highlighting."""
 
 import re
-import subprocess
 import typing
 
 import cmarkgfm  # type: ignore
 import pygments  # type: ignore
 import pygments.formatters  # type: ignore
 import pygments.lexers  # type: ignore
+import tidy  # type: ignore
 
 CODE_RE = re.compile(r"^```([a-z]+)?$(.+?)^```$", re.S | re.M)
 CMARK_FLAGS = 132096  # UNSAFE = 1 << 17; SMART = 1 << 10; CMARK_FLAGS = UNSAFE | SMART
@@ -73,8 +73,8 @@ def md_parse(md: str) -> str:
     return cmarkgfm.markdown_to_html(md, CMARK_FLAGS)
 
 
-def pretty_html(html: str) -> str:
-    """Prettify HTML.
+def tidy_html(html: str) -> str:
+    """Tidy HTML.
 
     Args:
         html: html string
@@ -82,8 +82,9 @@ def pretty_html(html: str) -> str:
     Returns:
         Prettified HTML as string
     """
-    return subprocess.check_output(
-        ["./node_modules/.bin/prettier", "--parser", "html"],
-        input=html,
-        encoding="utf-8",
+    result = tidy.parseString(
+        html,
+        indent="auto",
+        tidy_mark=0,
     )
+    return str(result)
