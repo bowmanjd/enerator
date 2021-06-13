@@ -4,9 +4,9 @@ import pathlib
 
 from enerator.template import render_from_file
 
-MARKDOWN = pathlib.Path("tests/sample.md")
-MARKDOWN_TEMPLATE = pathlib.Path("tests/sample_template.md")
-HTML_TEMPLATE = pathlib.Path("tests/sample_template.html")
+MARKDOWN = pathlib.Path("tests/src/sample.md")
+MARKDOWN_TEMPLATE = pathlib.Path("tests/tpl/sample_template.md")
+HTML_TEMPLATE = pathlib.Path("tests/tpl/sample_template.html")
 
 
 def test_render_to_md():
@@ -16,4 +16,4 @@ def test_render_to_md():
 
 def test_render_to_html():
     result = render_from_file(MARKDOWN, HTML_TEMPLATE)
-    assert result.content == pathlib.Path("tests/sample_output.html").read_text()
+    assert result.content == pathlib.Path("tests/out/sample_output.html").read_text()
